@@ -1,20 +1,24 @@
+
+const glob = require('glob')
+const titles = require('./templateTitle')
+
+let pages = {}
+
+glob.sync('./src/pages/**/main.js').forEach(filePath => {
+  const chunk = filePath.split('./src/pages/')[1].split('/main.js')[0]
+  pages[chunk] = {
+    entry: filePath,
+    template: filePath.replace('main.js', 'index.html'),
+    filename: chunk + '.html',
+    title: titles[chunk]
+  }
+})
+
 module.exports = {
-  pages: {
-    fontend: {
-      entry: 'src/pages/fontend/main.js',
-      template: 'src/pages/fontend/index.html',
-      // 模板编译后输出的名字 去掉后与template的文件名相同
-      filename: 'fontend.html',
-      title: '前台',
-      icon: 'src/pages/fontend/favicon.ico'
-      // chunks: ['console']
-    },
-    admin: {
-      entry: 'src/pages/admin/main.js',
-      template: 'src/pages/admin/index.html',
-      filename: 'admin.html',
-      title: '后台',
-      icon: 'src/pages/admin/favicon.ico'
-    }
+  pages: pages,
+  publicPath: './',
+  devServer: {
+    open: true,
+    index: '/fontend.html'    //  默认启动页面
   }
 }
